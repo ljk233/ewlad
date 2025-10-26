@@ -1,0 +1,12 @@
+[sheet]
+include = ["Data_2024", "Data_2023"]
+exclude = ["Cover_sheet", "Notes"]
+
+[columns]
+area_code = "column_1"
+year = "column_3"
+value = "column_4"
+
+[transform]
+year_regex = "^(\\d{4})"
+cast_types = { year = "Int64", value = "Float64" }

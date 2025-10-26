@@ -1,0 +1,15 @@
+[project]
+name = "ewlad"
+version = "0.1.0"
+description = ""
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = ["core", "pipeline", "staging"]
+
+[tool.uv.sources]
+core = { workspace = true }
+pipeline = { workspace = true }
+staging = { workspace = true }
+
+[tool.uv.workspace]
+members = ["packages/*"]

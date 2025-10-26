@@ -1,0 +1,29 @@
+
+project: UKStatsDB
+maintainer: Liam Kelly
+created: 2025-10-24
+description: >
+  A reproducible local data warehouse containing key statistics for
+  UK local authority districts.
+
+datasets:
+  els:
+    title: Explore Local Statistics
+    source_url: https://www.ons.gov.uk/explore-local-statistics/
+    publisher: Office for National Statistics (ONS)
+    license: Open Government Licence (OGL)
+    description: >
+      Explore Local Statistics is an interactive service by the UK Office
+      for National Statistics that brings together publicly available data
+      for local areas across the UK. It provides comparable, easy-to-use
+      statistics on topics such as population, economy, housing, health,
+      and the environment, allowing users to explore and download indicators
+      for specific local authorities or regions. Designed as a single access
+      point for sub-national data, it supports understanding of local trends
+      and comparisons between areas.
+    local_file: data/01_raw/els.ods
+    format: ods
+    last_downloaded: 2025-10-24
+    retrieval_method: Manual download
+    notes:
+      - Remote file is as an .ODS file, so converted to XLSX.

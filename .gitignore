@@ -1,0 +1,25 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
+
+# IDE
+ewlad.code-workspace
+
+# Folders and files
+.archive
+.env
+.source
+.staging
+
+data/manifest.json
+data/0_source
+data/1_raw/*.csv
+data/1_raw/*.xlsx
+data/2_staged/*.parquet
