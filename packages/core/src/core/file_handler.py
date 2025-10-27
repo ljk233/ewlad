@@ -8,9 +8,6 @@ from pathlib import Path
 from typing import Any
 
 
-JSONLike = dict[str, Any]
-
-
 def hash_file(path: Path | str, block_size: int = 8192) -> str:
     """Return the `sha256` hex digest of the file at `path`."""
     h = hashlib.new("sha256")
@@ -21,35 +18,33 @@ def hash_file(path: Path | str, block_size: int = 8192) -> str:
     return h.hexdigest()
 
 
-def read_json(file_path: Path | str) -> JSONLike:
-    path = Path(file_path)
-    if not path.parts[-1].endswith("json"):
-        raise ValueError(f"File '{file_path}' is not a JSON file.")
+def read_json(file: Path | str) -> dict[str, Any]:
+    path = Path(file)
+    if not path.suffix.lower() == ".json":
+        raise ValueError(f"File '{file}' is not a JSON file.")
 
-    with open(file_path, "r") as f:
+    with path.open("r") as f:
         return json.load(f)
 
 
-def write_json(file: Path | str, obj: JSONLike) -> None:
-    with Path(file).open("w") as fp:
-        json.dump(obj, fp, indent=2)
+def write_json(file: Path | str, obj: dict[str, Any]) -> None:
+    path = Path(file)
+    if not path.suffix.lower() == ".json":
+        raise ValueError(f"File '{file}' is not a JSON file.")
+
+    with path.open("w") as f:
+        json.dump(obj, f, indent=2)
 
 
-def load_toml(file_path: Path | str) -> JSONLike:
-    path = Path(file_path)
-    if not path.parts[-1].endswith("toml"):
-        raise ValueError(f"File '{file_path}' is not a TOML file.")
+def load_toml(file: Path | str) -> dict[str, Any]:
+    path = Path(file)
+    if not path.suffix.lower() == ".toml":
+        raise ValueError(f"File '{file}' is not a TOML file.")
 
-    with open(file_path, "rb") as f:
+    with path.open("rb") as f:
         return tomllib.load(f)
 
 
-def read_file(file_path: str) -> str:
-    with open(file_path, "r") as f:
-        return f.read()
-
-
-def version_file_path(file_path: Path | str) -> Path:
-    file_path_str = str(Path(file_path))
+def version_file(file: Path | str) -> Path:
     now = dt.now().strftime("%Y%m%d%H%M%S")
-    return Path(f"{file_path_str}_{now}")
+    return Path(f"{file}_{now}")
