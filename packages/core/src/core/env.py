@@ -1,17 +1,19 @@
 """core/env.py"""
 
-import os
-
 from pathlib import Path
 from typing import NamedTuple
+
+from loguru import logger
 
 import dotenv
 
 
 class Env(NamedTuple):
-    raw_dir: Path
-    staged_dir: Path
+    raw: Path
+    staged: Path
     manifest: Path
+    database: Path
+    sql: Path
 
 
 def create_env() -> Env:
@@ -19,6 +21,12 @@ def create_env() -> Env:
         raise OSError("No .env file found.")
 
     parsed_vars = {k.lower(): Path(v) for k, v in dotenv.dotenv_values().items() if v}
+
+    for path in parsed_vars.values():
+        if path.exists() or not path.suffix:
+            continue
+        path.mkdir(parents=True)
+        logger.info(f"Created directory '{str(path)}'")
 
     try:
         return Env(**parsed_vars)
