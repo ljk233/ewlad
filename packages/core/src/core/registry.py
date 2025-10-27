@@ -1,31 +1,34 @@
-"""pipeline.registry.py"""
+"""core/registry.py"""
 
+import functools
 import importlib
 import pkgutil
-from pathlib import Path
-from typing import Callable
 
-import polars as pl
+from loguru import logger
 
-
-StagingFn = Callable[[Path | str], pl.DataFrame]
+from core.typing import StagingFuncMap
 
 
-staging_funcs: dict[str, StagingFn] = {}
+staging_funcs: StagingFuncMap = {}
 
 
-def register_function(file: str):
+def register_staging_func(file_key: str):
     def decorator(func):
-        staging_funcs[file] = func
-        return func
+        if file_key in staging_funcs:
+            raise KeyError(f"Staging function for '{file_key}' already registered.")
+
+        staging_funcs[file_key] = func
+        return functools.wraps(func)(func)
 
     return decorator
 
 
-def register_functions(staging):
-    """
-    Dynamically import modules inside data_pipeline.staging so that their
-    register_staging_pipeline decorators populate staging_pipelines.
-    """
-    for _, module_name, _ in pkgutil.iter_modules(staging.__path__):
-        importlib.import_module(f"{staging.__name__}.{module_name}")
+def populate_registry(pkg):
+    n = 0
+    for _, module_name, _ in pkgutil.iter_modules(pkg.__path__):
+        try:
+            importlib.import_module(f"{pkg.__name__}.{module_name}")
+            n += 1
+        except Exception as err:
+            logger.error(f"Error importing module {pkg.__name__}.{module_name}: {err}")
+    logger.info(f"Imported {n} module(s) from {pkg.__name__}")
